@@ -1,10 +1,31 @@
 import { Client } from '@temporalio/client';
-import { example } from './workflows.js';
+import { fetchAndFilterSwapiPeople, generateRandomFilmQuoteEveryMinute } from './workflows.js';
+import { Rule } from './shared.js';
+
+const rules: Rule[] = [
+  {
+    propertyName: 'name',
+    operator: 'containsNumbers',
+    value: null,
+  },
+  {
+    propertyName: 'eye_color',
+    operator: 'equals',
+    value: 'red',
+  },
+];
 
 const client = new Client();
-const result = await client.workflow.execute(example, {
-  taskQueue: 'fetch-esm',
-  workflowId: 'my-business-id',
-  args: ['Temporal'],
+
+const filteredPeople = await client.workflow.execute(fetchAndFilterSwapiPeople, {
+  taskQueue: 'swapi',
+  workflowId: 'swapi-filtered-people',
+  args: [rules],
 });
-console.log(result); // Hello, Temporal!
+
+const filmQuote = await client.workflow.execute(generateRandomFilmQuoteEveryMinute, {
+  taskQueue: 'swapi',
+  workflowId: 'swapi-film-quote',
+});
+
+console.log(filteredPeople, filmQuote);
