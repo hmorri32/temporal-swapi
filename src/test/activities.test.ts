@@ -1,4 +1,4 @@
-import { MockActivityEnvironment, TestWorkflowEnvironment } from '@temporalio/testing';
+import { MockActivityEnvironment } from '@temporalio/testing';
 import { Rule } from '../shared';
 import * as activities from '../activities';
 

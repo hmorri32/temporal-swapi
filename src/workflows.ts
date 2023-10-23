@@ -6,6 +6,36 @@ const { fetchSwapiPeople, fetchRandomFilmQuote } = proxyActivities<typeof activi
   startToCloseTimeout: '1 minute',
 });
 
+function filterPeople2(people: IPeople[], rules: Rule[], logic = 'AND'): IPeople[] {
+  return people.filter((person) => {
+    const results: boolean[] = [];
+
+    for (const rule of rules) {
+      const propertyValue = person[rule.propertyName as keyof IPeople];
+
+      switch (rule.operator) {
+        case 'containsNumbers':
+          if (typeof propertyValue === 'string') {
+            const regex = /\d+/;
+            results.push(regex.test(propertyValue));
+          } else {
+            results.push(false);
+          }
+          break;
+
+        case 'equals':
+          results.push(propertyValue === rule.value);
+          break;
+
+        default:
+          results.push(true);
+      }
+    }
+
+    return logic === 'OR' ? results.some((result) => result) : results.every((result) => result);
+  });
+}
+
 function filterPeople(people: IPeople[], rules: Rule[]): IPeople[] {
   return people.filter((person) => {
     return rules.every((rule) => {
@@ -39,10 +69,10 @@ export async function fetchAndFilterSwapiPeople(rules: Rule[]) {
 export async function generateRandomFilmQuoteEveryMinute(): Promise<string[]> {
   let count = 0;
   const maxTries = 5;
-  const quotes = []
+  const quotes = [];
   while (count < maxTries) {
     const quote = await fetchRandomFilmQuote();
-    quotes.push(quote)
+    quotes.push(quote);
     console.log(quote);
     count++;
     await sleep(10 * 60 * 100);
