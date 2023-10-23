@@ -6,56 +6,32 @@ const { fetchSwapiPeople, fetchRandomFilmQuote } = proxyActivities<typeof activi
   startToCloseTimeout: '1 minute',
 });
 
-function filterPeople2(people: IPeople[], rules: Rule[], logic = 'AND'): IPeople[] {
-  return people.filter((person) => {
-    const results: boolean[] = [];
+export function matchesRule(person: IPeople, rule: Rule): boolean {
+  const propertyValue = person[rule.propertyName as keyof IPeople];
 
-    for (const rule of rules) {
-      const propertyValue = person[rule.propertyName as keyof IPeople];
+  switch (rule.operator) {
+    case 'containsNumbers':
+      return typeof propertyValue === 'string' && /\d+/.test(propertyValue);
 
-      switch (rule.operator) {
-        case 'containsNumbers':
-          if (typeof propertyValue === 'string') {
-            const regex = /\d+/;
-            results.push(regex.test(propertyValue));
-          } else {
-            results.push(false);
-          }
-          break;
+    case 'equals':
+      return propertyValue === rule.value;
 
-        case 'equals':
-          results.push(propertyValue === rule.value);
-          break;
+    case 'greaterThan': // todo handle type coercion
+      return propertyValue > rule.value;
 
-        default:
-          results.push(true);
-      }
-    }
+    case 'lessThan':
+      return propertyValue < rule.value;
 
-    return logic === 'OR' ? results.some((result) => result) : results.every((result) => result);
-  });
+    default:
+      return true;
+  }
 }
 
-function filterPeople(people: IPeople[], rules: Rule[]): IPeople[] {
+export function filterPeople(people: IPeople[], rules: Rule[], logic: 'AND' | 'OR' = 'AND'): IPeople[] {
   return people.filter((person) => {
-    return rules.every((rule) => {
-      const propertyValue = person[rule.propertyName as keyof IPeople];
+    const results = rules.map((rule) => matchesRule(person, rule));
 
-      switch (rule.operator) {
-        case 'containsNumbers':
-          if (typeof propertyValue === 'string') {
-            const regex = /\d+/;
-            return regex.test(propertyValue);
-          }
-          return false;
-
-        case 'equals':
-          return propertyValue === rule.value;
-
-        default:
-          return true;
-      }
-    });
+    return logic === 'AND' ? results.every(Boolean) : results.some(Boolean);
   });
 }
 

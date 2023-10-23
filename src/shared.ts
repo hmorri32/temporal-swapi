@@ -5,16 +5,18 @@ export type SwapiResponse = {
   results: any[];
 };
 
+export type Operator = 'containsNumbers' | 'equals' | 'greaterThan' | 'lessThan';
+
 export type Rule = {
   propertyName: string;
-  operator: string;
+  operator: 'containsNumbers' | 'equals' | 'greaterThan' | 'lessThan';
   value: any;
 };
 
 export interface IPeople {
   birth_year: string;
   eye_color: string;
-  films: IFilm[];
+  films: string[];
   gender: string;
   hair_color: string;
   height: string;
@@ -22,8 +24,8 @@ export interface IPeople {
   mass: string;
   name: string;
   skin_color: string;
-  created: Date;
-  edited: Date;
+  created: string;
+  edited: string;
   species: string[];
   starships: string[];
   url: string;
@@ -32,14 +34,14 @@ export interface IPeople {
 
 export interface IFilm {
   characters: string[] | IPeople[];
-  created: Date;
+  created: string;
   director: string;
-  edited: Date;
+  edited: string;
   episode_id: string;
   opening_crawl: string;
   planets: string[];
   producer: string;
-  release_date: Date;
+  release_date: string;
   species: string[];
   starships: string[];
   title: string;
