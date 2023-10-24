@@ -16,11 +16,17 @@ export function matchesRule(person: IPeople, rule: Rule): boolean {
     case 'equals':
       return propertyValue === rule.value;
 
-    case 'greaterThan': // todo handle type coercion
-      return propertyValue > rule.value;
+    case 'greaterThan':
+      if (typeof propertyValue === 'string' && !isNaN(Number(propertyValue))) {
+        return Number(propertyValue) > Number(rule.value);
+      }
+      return false;
 
     case 'lessThan':
-      return propertyValue < rule.value;
+      if (typeof propertyValue === 'string' && !isNaN(Number(propertyValue))) {
+        return Number(propertyValue) < Number(rule.value);
+      }
+      return false;
 
     default:
       return true;

@@ -1,5 +1,4 @@
 import { MockActivityEnvironment } from '@temporalio/testing';
-import { Rule } from '../shared';
 import * as activities from '../activities';
 
 import fetch, { Response } from 'node-fetch';
