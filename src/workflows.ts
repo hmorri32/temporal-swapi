@@ -47,7 +47,7 @@ export async function fetchAndFilterSwapiPeople(rules: Rule[]) {
   return filterPeople(people, rules);
 }
 
-// fetches and logs a random movie quote every minute for 5 minutes
+// fetches and logs a random movie quote every minute for 5 minutes just for fun
 export async function generateRandomFilmQuoteEveryMinute(): Promise<string[]> {
   let count = 0;
   const maxTries = 5;

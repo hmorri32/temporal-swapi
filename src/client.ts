@@ -23,9 +23,9 @@ const filteredPeople = await client.workflow.execute(fetchAndFilterSwapiPeople, 
   args: [rules],
 });
 
-const filmQuote = await client.workflow.execute(generateRandomFilmQuoteEveryMinute, {
+const filmQuotes = await client.workflow.execute(generateRandomFilmQuoteEveryMinute, {
   taskQueue: 'swapi',
   workflowId: 'swapi-film-quote',
 });
 
-console.log(filteredPeople, filmQuote);
+console.log(filteredPeople, filmQuotes);

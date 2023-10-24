@@ -22,7 +22,6 @@ export async function fetchRandomFilmQuote(): Promise<string> {
   try {
     const response = await fetch('https://swapi.dev/api/films/');
     const data = (await response.json()) as SwapiResponse;
-    console.log(data)
     const films = data.results;
     const randomFilm = films[Math.floor(Math.random() * films.length)];
     const quote = randomFilm.opening_crawl.replace(/\r\n\r\n/g, ' ').replace(/\r\n/g, ' ');
